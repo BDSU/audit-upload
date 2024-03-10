@@ -1,0 +1,3 @@
+- [ ] Wie file Uploads?
+	- Pfad in Datenbank speichern
+- [ ] Datenbankschema

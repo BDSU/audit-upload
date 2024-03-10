@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"             // Typ der Datenbank
+  url      = env("DATABASE_URL")  // Speicherpfad der Datenbank
+}
+
+model Je {
+  id     Int     @id @default(autoincrement())
+  name   String   // Name jeder JE im BDSU
+  audits Audit[]  // Der jeweiligen JE zugeordnete Audits (Rückverknüpfung aus "Audit")
+}
+
+model Audit {
+  id           Int           @id @default(autoincrement())
+  date         DateTime   // Einreichung Deadline (1. August xxxx für Standard-Audits)
+  name         String     // Bezeichnung des Audits (etwa "Audit 2024" für das Standard-Audit 2023/24)
+  je           Je            @relation(fields: [jeId], references: [id])
+  jeId         Int            // Je, der das Audit zugeordnet ist (Fremdschlüssel)
+  requirements Requirement[]  // Dem Audit zugeordnete Requirements (Rückverknüpfung "Requirement")
+}
+
+model Requirement {
+  id        Int     @id @default(autoincrement())
+  fileTitle String    // Bezeichnung der Unterlage (z.B. "Angebot", "Schulungspräsentation")
+  instance  String?   // Einzelne Instanz einer Kategorie (z.B. "Projektxy", "Schulung xxx")
+  fileGroup String    // Kategorie von Anforderungen (z.B. "projects", "trainings")
+  audit     Audit   @relation(fields: [auditId], references: [id])
+  auditId   Int       // Audit, dem das Requirement zugeordnet ist (Fremdschlüssel)
+  files     File[]    // Dateien, die dem Audit zugeordnet sind (m:n - Verknüpfung)
+  sample    Boolean?  // Gibt an, ob das Requirement für die "Stichprobe" gezogen wurde
+}
+
+model File {
+  id          Int           @id @default(autoincrement())
+  fileName    String        // Standardisierter Dateiname, der bei Herunterladen angehängt wird
+  requirement Requirement[] // Requirements, dem die Datei zugeordnet ist (m:n - Verknüpfung)
+}
+
+model Role {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique   // Bezeichnung der Rolle ("Auditor", "QMler")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique   // E-Mail des Nutzers (übereinstimmend mit BDSU-Connect)
+  name        String?                 // Name des Nutzers (nicht notwendig)
+}

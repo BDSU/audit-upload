@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "BSDU Upload File",
+  "description": "Defines the structure of upload file description for the BDSU Audit process",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "description": "Name of the file category, e.g. projects",
+    "properties": {
+      "displayName": {
+        "description": "Name of the file category, e.g. projects",
+        "type": "string"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "fileTitle": {
+              "description": "Name of the file to be uploaded",
+              "type": "string"
+            },
+            "allowedFormats": {
+              "description": "Suffices of the allowed file formats to be uploaded",
+              "type": "string"
+            },
+            "legalRef": {
+              "description": "Referenced part of the BDSU guidelines",
+              "type": "string"
+            },
+            "helpText": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
